@@ -1,5 +1,4 @@
 from datetime import datetime
-from uuid import UUID
 
 from msgspec import Struct
 
@@ -16,7 +15,7 @@ class UserPartialUpdateSchema(Struct):
 
 
 class UserResponseSchema(Struct):
-    id: UUID
+    id: int
     name: str
     surname: str
     created_at: datetime

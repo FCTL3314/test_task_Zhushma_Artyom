@@ -1,7 +1,6 @@
 # 📖 Table of contents
 
 [![Python](https://img.shields.io/badge/Python-3.12-3777A7?style=flat-square)](https://www.python.org/)
-[![Fastapi](https://img.shields.io/badge/FastAPI-0.115.12-009688?style=flat-square)](https://fastapi.tiangolo.com/)
 [![Black](https://img.shields.io/badge/Style-Black-black?style=flat-square)](https://black.readthedocs.io/en/stable/)
 
 <ul>
@@ -34,3 +33,7 @@
 **Использовал:**
 * Asyncpg для асинхронных запросов к базе данных.
 * AdvanceAlchemy как обёртку поверх SQLAlchemy и Alembic.
+* Msgspec для представления DTO объектов.
+* БД PostgreSQL
+* Docker для инфраструктуры приложения.
+* Пакетный менеджер Poetry.
