@@ -1,14 +1,13 @@
 from uuid import UUID
 
-from advanced_alchemy.filters import FilterTypes
 from litestar import Controller, get, post, patch, delete
 from litestar.di import Provide
 from litestar.pagination import OffsetPagination
 from litestar.params import Parameter
 from litestar.repository.filters import LimitOffset
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.user import User
-from app.schemas.user import UserCreateSchema, UserUpdateSchema, UserResponseSchema
+from app.schemas.user import UserCreateSchema, UserPartialUpdateSchema, UserResponseSchema
 from app.services.user import provide_users_service, UserService
 
 
@@ -21,7 +20,7 @@ class UserController(Controller):
     async def list_users(
         self,
         users_service: UserService,
-        limit_offset: FilterTypes,
+        limit_offset: LimitOffset,
     ) -> OffsetPagination[UserResponseSchema]:
         results, total = await users_service.list_and_count(limit_offset)
         return users_service.to_schema(
@@ -37,10 +36,10 @@ class UserController(Controller):
         users_service: UserService,
         data: UserCreateSchema,
     ) -> UserResponseSchema:
-        obj = await users_service.create(data)
+        obj = await users_service.create(data, auto_commit=True)
         return users_service.to_schema(data=obj, schema_type=UserResponseSchema)
 
-    @get(path="/{user_id_id:uuid}")
+    @get(path="/{user_id:uuid}")
     async def get_user(
         self,
         users_service: UserService,
@@ -48,22 +47,22 @@ class UserController(Controller):
             title="User ID",
             description="The user to retrieve.",
         ),
-    ) -> User:
+    ) -> UserResponseSchema:
         obj = await users_service.get(user_id)
-        return users_service.to_schema(data=obj, schema_type=User)
+        return users_service.to_schema(data=obj, schema_type=UserResponseSchema)
 
     @patch(path="/{user_id:uuid}")
     async def update_user(
         self,
         users_service: UserService,
-        data: UserUpdateSchema,
+        data: UserPartialUpdateSchema,
         user_id: UUID = Parameter(
             title="User ID",
             description="The user to update.",
         ),
-    ) -> User:
-        obj = await users_service.update(data=data, item_id=user_id)
-        return users_service.to_schema(obj, schema_type=User)
+    ) -> UserResponseSchema:
+        obj = await users_service.update(data=data, item_id=user_id, auto_commit=True)
+        return users_service.to_schema(obj, schema_type=UserResponseSchema)
 
     @delete(path="/{user_id:uuid}")
     async def delete_user(
@@ -74,4 +73,4 @@ class UserController(Controller):
             description="The user to delete.",
         ),
     ) -> None:
-        _ = await users_service.delete(user_id)
+        _ = await users_service.delete(user_id, auto_commit=True)

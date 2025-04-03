@@ -10,9 +10,9 @@ class UserCreateSchema(Struct):
     password: str
 
 
-class UserUpdateSchema(Struct):
-    name: str
-    surname: str
+class UserPartialUpdateSchema(Struct):
+    name: str | None = None
+    surname: str | None = None
 
 
 class UserResponseSchema(Struct):
