@@ -1,5 +1,6 @@
 from uuid import UUID
 
+from advanced_alchemy.filters import FilterTypes
 from litestar import Controller, get, post, patch, delete
 from litestar.di import Provide
 from litestar.pagination import OffsetPagination
@@ -7,7 +8,7 @@ from litestar.params import Parameter
 from litestar.repository.filters import LimitOffset
 
 from app.models.user import User
-from app.schemas.user import UserCreateSchema, UserUpdateSchema
+from app.schemas.user import UserCreateSchema, UserUpdateSchema, UserResponseSchema
 from app.services.user import provide_users_service, UserService
 
 
@@ -20,14 +21,14 @@ class UserController(Controller):
     async def list_users(
         self,
         users_service: UserService,
-        limit_offset: LimitOffset,
-    ) -> OffsetPagination[User]:
+        limit_offset: FilterTypes,
+    ) -> OffsetPagination[UserResponseSchema]:
         results, total = await users_service.list_and_count(limit_offset)
         return users_service.to_schema(
             data=results,
             total=total,
             filters=[limit_offset],
-            schema_type=User,
+            schema_type=UserResponseSchema,
         )
 
     @post()
@@ -35,9 +36,9 @@ class UserController(Controller):
         self,
         users_service: UserService,
         data: UserCreateSchema,
-    ) -> User:
+    ) -> UserResponseSchema:
         obj = await users_service.create(data)
-        return users_service.to_schema(data=obj, schema_type=User)
+        return users_service.to_schema(data=obj, schema_type=UserResponseSchema)
 
     @get(path="/{user_id_id:uuid}")
     async def get_user(

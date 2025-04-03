@@ -12,6 +12,7 @@ router = Router(
 
 
 app = Litestar(
+    debug=True,
     route_handlers=(router,),
     plugins=(alchemy,),
     dependencies={
