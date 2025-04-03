@@ -2,6 +2,8 @@ from msgspec import Struct
 
 
 class Settings(Struct):
+    debug: bool
+
     db_name: str
     db_host: str
     db_port: str | int

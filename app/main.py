@@ -1,6 +1,7 @@
 from litestar import Litestar, Router
 from litestar.di import Provide
 
+from app import settings
 from app.controllers.user import UserController
 from app.db import alchemy
 from app.dependencies.pagination import provide_limit_offset_pagination
@@ -12,7 +13,7 @@ router = Router(
 
 
 app = Litestar(
-    debug=True,
+    debug=settings.debug,
     route_handlers=(router,),
     plugins=(alchemy,),
     dependencies={
