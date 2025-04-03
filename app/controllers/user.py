@@ -1,13 +1,14 @@
-from uuid import UUID
-
 from litestar import Controller, get, post, patch, delete
 from litestar.di import Provide
 from litestar.pagination import OffsetPagination
 from litestar.params import Parameter
 from litestar.repository.filters import LimitOffset
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.schemas.user import UserCreateSchema, UserPartialUpdateSchema, UserResponseSchema
+from app.schemas.user import (
+    UserCreateSchema,
+    UserPartialUpdateSchema,
+    UserResponseSchema,
+)
 from app.services.user import provide_users_service, UserService
 
 
@@ -39,11 +40,11 @@ class UserController(Controller):
         obj = await users_service.create(data, auto_commit=True)
         return users_service.to_schema(data=obj, schema_type=UserResponseSchema)
 
-    @get(path="/{user_id:uuid}")
+    @get(path="/{user_id:int}")
     async def get_user(
         self,
         users_service: UserService,
-        user_id: UUID = Parameter(
+        user_id: int = Parameter(
             title="User ID",
             description="The user to retrieve.",
         ),
@@ -51,12 +52,12 @@ class UserController(Controller):
         obj = await users_service.get(user_id)
         return users_service.to_schema(data=obj, schema_type=UserResponseSchema)
 
-    @patch(path="/{user_id:uuid}")
+    @patch(path="/{user_id:int}")
     async def update_user(
         self,
         users_service: UserService,
         data: UserPartialUpdateSchema,
-        user_id: UUID = Parameter(
+        user_id: int = Parameter(
             title="User ID",
             description="The user to update.",
         ),
@@ -64,11 +65,11 @@ class UserController(Controller):
         obj = await users_service.update(data=data, item_id=user_id, auto_commit=True)
         return users_service.to_schema(obj, schema_type=UserResponseSchema)
 
-    @delete(path="/{user_id:uuid}")
+    @delete(path="/{user_id:int}")
     async def delete_user(
         self,
         users_service: UserService,
-        user_id: UUID = Parameter(
+        user_id: int = Parameter(
             title="User ID",
             description="The user to delete.",
         ),

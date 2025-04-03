@@ -1,9 +1,9 @@
 [tool.poetry]
-name = "test-task-zhushma-artyom"
+name = "test_task_zhushma_artyom"
 version = "0.1.0"
 description = "Test task"
-readme = "README.md"
-authors = ["Your Name <you@example.com>"]
+authors = ["Nikita Solovyov  <solovev.nikita.05@gmail.com>"]
+package-mode = false
 
 [tool.poetry.dependencies]
 python = ">=3.12,<4.0"
